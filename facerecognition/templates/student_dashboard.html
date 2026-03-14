@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block content %}
+<header>
+    <h1>Student Dashboard</h1>
+    <p class="subtitle">Check your progress and attendance history</p>
+</header>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-label">Total Hours Attended</div>
+        <div class="stat-value">{{ total_attended }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Overall Attendance</div>
+        <div class="stat-value">{{ overall_percentage|round(2) }}%</div>
+    </div>
+</div>
+
+<div class="subject-section-title">Your Subject Attendance</div>
+<div class="subjects-grid">
+    {% for item in subject_attendance %}
+    <div class="subject-card">
+        <div class="subject-header">
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <div class="subject-icon">
+                    <i class="fas {{ item.subject.icon }}"></i>
+                </div>
+                <div>
+                    <div class="subject-name">{{ item.subject.name }}</div>
+                    <div class="subject-logs">{{ item.count }} / {{ item.subject.total_hours }} hours</div>
+                </div>
+            </div>
+            <div class="subject-percentage">{{ item.percentage|round(2) }}%</div>
+        </div>
+        <div class="progress-bar-container">
+            <div class="progress-bar-fill" style="width: {{ item.percentage }}%;"></div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="table-section">
+    <div class="table-header">Attendance History</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Subject</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for att in attendances %}
+            <tr>
+                <td>{{ att.date.strftime('%Y-%m-%d') }}</td>
+                <td>{{ att.time.strftime('%H:%M:%S') }}</td>
+                <td>{{ att.subject.name }}</td>
+                <td><span style="color: #4CAF50; font-weight: 600;">{{ att.status }}</span></td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 2rem;">No attendance
+                    records found yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
